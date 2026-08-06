@@ -1,0 +1,322 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:root {
+  color-scheme: dark;
+  --bg: #0a0c10;
+  --bg-alt: #12151b;
+  --surface: #14171f;
+  --surface-raised: #1a1e27;
+  --line: rgba(232, 226, 212, 0.09);
+  --text: #ece7db;
+  --muted: #83899a;
+  --amber: #f2a93b;
+  --amber-dim: rgba(242, 169, 59, 0.14);
+  --teal: #4fd1c5;
+  --red-tick: #e2492f;
+  --shadow: 0 40px 90px rgba(0, 0, 0, 0.55);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text);
+  background:
+    radial-gradient(ellipse 900px 500px at 15% -10%, rgba(242, 169, 59, 0.08), transparent 60%),
+    radial-gradient(ellipse 700px 500px at 100% 10%, rgba(79, 209, 197, 0.06), transparent 55%),
+    var(--bg);
+  min-height: 100vh;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image: repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.018) 0px,
+      rgba(255, 255, 255, 0.018) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+}
+
+.shell {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 48px 20px;
+}
+
+.hero-card {
+  width: min(780px, 100%);
+  position: relative;
+  padding: 46px 44px 40px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: linear-gradient(180deg, var(--surface) 0%, var(--bg-alt) 100%);
+  box-shadow: var(--shadow);
+}
+
+.hero-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 24px;
+  right: 24px;
+  height: 1px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--line) 0,
+    var(--line) 6px,
+    transparent 6px,
+    transparent 18px
+  );
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 12px 7px 10px;
+  border: 1px solid rgba(242, 169, 59, 0.3);
+  border-radius: 3px;
+  background: var(--amber-dim);
+  color: var(--amber);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--red-tick);
+  box-shadow: 0 0 8px rgba(226, 73, 47, 0.8);
+}
+
+h1 {
+  margin: 22px 0 14px;
+  font-family: 'Bebas Neue', 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: clamp(2.6rem, 6vw, 4.6rem);
+  line-height: 0.98;
+  letter-spacing: 0.005em;
+  color: #fdfaf3;
+  max-width: 16ch;
+}
+
+.lede {
+  margin: 0;
+  max-width: 52ch;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+}
+
+.input-row {
+  margin-top: 32px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+}
+
+input,
+button {
+  border: 0;
+  font-family: 'JetBrains Mono', monospace;
+  border-radius: 4px;
+}
+
+input {
+  height: 54px;
+  padding: 0 18px;
+  background: #0d0f14;
+  color: var(--text);
+  font-size: 0.9rem;
+  border: 1px solid var(--line);
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+input::placeholder {
+  color: #4a5064;
+}
+
+input:focus {
+  outline: none;
+  border-color: rgba(242, 169, 59, 0.55);
+  box-shadow: 0 0 0 3px rgba(242, 169, 59, 0.12);
+}
+
+button {
+  height: 54px;
+  padding: 0 26px;
+  background: var(--amber);
+  color: #14100a;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 140ms ease, background 140ms ease, opacity 140ms ease;
+}
+
+button:hover:not(:disabled) {
+  background: #ffbf5c;
+  transform: translateY(-1px);
+}
+
+button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: wait;
+  transform: none;
+}
+
+.status {
+  min-height: 22px;
+  margin-top: 16px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+}
+
+.result {
+  margin-top: 30px;
+  padding: 28px;
+  border-radius: 5px;
+  background: var(--surface-raised);
+  border: 1px solid var(--line);
+  animation: reveal 320ms ease;
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.result.hidden {
+  display: none;
+}
+
+.result-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 22px;
+  border-bottom: 1px dashed var(--line);
+}
+
+.result-label {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+}
+
+.result h2 {
+  margin: 0;
+  font-family: 'Bebas Neue', sans-serif;
+  font-weight: 400;
+  font-size: clamp(2.1rem, 4.4vw, 3rem);
+  letter-spacing: 0.01em;
+  color: #fdfaf3;
+}
+
+.result-pill {
+  padding: 12px 16px;
+  border-radius: 4px;
+  background: #0a0c10;
+  border: 1px solid var(--teal);
+  color: var(--teal);
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: 0.08em;
+  text-shadow: 0 0 12px rgba(79, 209, 197, 0.35);
+  white-space: nowrap;
+}
+
+.result-grid {
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.result-grid > div {
+  padding: 16px;
+  background: var(--surface-raised);
+}
+
+.result-grid span {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.result-grid strong {
+  font-size: 0.92rem;
+  font-weight: 500;
+  line-height: 1.35;
+  word-break: break-word;
+  color: var(--text);
+}
+
+@media (max-width: 700px) {
+  .hero-card {
+    padding: 30px 24px;
+  }
+
+  .input-row,
+  .result-grid,
+  .result-top {
+    grid-template-columns: 1fr;
+  }
+
+  .result-top {
+    display: grid;
+  }
+
+  .input-row {
+    grid-template-columns: 1fr;
+  }
+
+  button,
+  input {
+    width: 100%;
+  }
+}
