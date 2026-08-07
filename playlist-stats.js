@@ -88,6 +88,50 @@ function parseYtDlpDurationOutput(rawOutput) {
     .filter((value) => Number.isFinite(value));
 }
 
+function extractPlaylistEntriesFromJson(rawOutput) {
+  const parsed = JSON.parse(rawOutput);
+
+  return {
+    title: parsed.title || 'Untitled playlist',
+    entries: Array.isArray(parsed.entries) ? parsed.entries.filter(Boolean) : [],
+  };
+}
+
+async function analyzePlaylistWithJson(playlistUrl, ytDlp) {
+  const raw = await ytDlp.execPromise([
+    playlistUrl,
+    '--flat-playlist',
+    '--dump-single-json',
+    '--no-warnings',
+    '--ignore-errors',
+  ]);
+
+  const { title, entries } = extractPlaylistEntriesFromJson(raw);
+  if (entries.length === 0) {
+    throw new Error('No playlist entries returned.');
+  }
+
+  return calculatePlaylistStats(entries, title);
+}
+
+async function analyzePlaylistWithDurations(playlistUrl, ytDlp) {
+  const raw = await ytDlp.execPromise([
+    playlistUrl,
+    '--skip-download',
+    '--print',
+    '%(duration)s',
+    '--no-warnings',
+    '--ignore-errors',
+  ]);
+
+  const durations = parseYtDlpDurationOutput(raw);
+  if (durations.length === 0) {
+    throw new Error('No playlist durations returned.');
+  }
+
+  return calculatePlaylistStats(durations.map((value) => ({ duration: value })), 'Untitled playlist');
+}
+
 async function getYtDlp() {
   if (!ytDlpInstancePromise) {
     ytDlpInstancePromise = (async () => {
@@ -115,19 +159,15 @@ async function analyzePlaylist(playlistUrl) {
   }
 
   const ytDlp = await getYtDlp();
-  const raw = await ytDlp.execPromise([
-    playlistUrl,
-    '--skip-download',
-    '--playlist-end',
-    '200',
-    '--print',
-    '%(duration)s',
-    '--no-warnings',
-    '--ignore-errors',
-  ]);
 
-  const durations = parseYtDlpDurationOutput(raw);
-  const stats = calculatePlaylistStats(durations.map((value) => ({ duration: value })), 'Playlist');
+  let stats;
+  try {
+    stats = await analyzePlaylistWithJson(playlistUrl, ytDlp);
+  } catch (jsonError) {
+    console.warn('JSON playlist analysis failed, falling back to duration print:', jsonError.message || jsonError);
+    stats = await analyzePlaylistWithDurations(playlistUrl, ytDlp);
+  }
+
   cachedResults.set(cacheKey, stats);
   return stats;
 }
@@ -135,5 +175,8 @@ async function analyzePlaylist(playlistUrl) {
 module.exports = {
   analyzePlaylist,
   calculatePlaylistStats,
+  extractPlaylistEntriesFromJson,
+  analyzePlaylistWithJson,
+  analyzePlaylistWithDurations,
   parseYtDlpDurationOutput,
 };
