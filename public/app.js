@@ -6,6 +6,7 @@ const durationTextEl = document.getElementById('duration-text');
 const durationDigitalEl = document.getElementById('duration-digital');
 const playlistTitleEl = document.getElementById('playlist-title');
 const playlistCountEl = document.getElementById('playlist-count');
+const averageDurationEl = document.getElementById('average-duration');
 const button = form.querySelector('button');
 
 function setStatus(message, isError = false) {
@@ -50,6 +51,7 @@ form.addEventListener('submit', async (event) => {
     durationDigitalEl.textContent = data.duration.digital;
     playlistTitleEl.textContent = data.title || 'Untitled playlist';
     playlistCountEl.textContent = String(data.itemCount);
+    averageDurationEl.textContent = data.averageDuration?.text || '0h 0m 0s';
     resultEl.classList.remove('hidden');
     setStatus('Done.');
   } catch (error) {
